@@ -23,14 +23,27 @@ CHARGE_DURATION = 60  # frames
 class AdvancedEnemy(GameObject):
     def __init__(self, x, y):
         # TODO: Initialize the AdvancedEnemy object
+        super().__init__(x, y, SQUARE_SIZE, PURPLE)
+        self.speed = ADVANCED_ENEMY_SPEED
+        self.angle = random.uniform(0, 2*math.pi)
+        self.charge_cooldown = 0
+        self.charge_duration = CHARGE_DURATION        
         # 1. Call the parent class's __init__ method with appropriate arguments
         # 2. Set the initial speed to ADVANCED_ENEMY_SPEED
         # 3. Set a random initial angle (hint: use random.uniform(0, 2 * math.pi))
         # 4. Initialize charge_cooldown and charge_duration to 0
-        pass
+        
 
     def update(self, player):
         # TODO: Update the advanced enemy's state and position
+        if self.charge_duration > 0:
+            self.charge(player)
+        elif self.charge_duration == 0:
+            self.prepare_charge(player)
+        else:
+            self.move_random
+            self.charge_cooldown -= 1
+        self.keep_in_bounds()
         # 1. Check if the enemy is currently charging (charge_duration > 0)
         #    If so, call self.charge(player)
         # 2. If not charging, check if charge is ready (charge_cooldown == 0)
@@ -38,10 +51,14 @@ class AdvancedEnemy(GameObject):
         # 3. If not charging and not ready, call self.move_random()
         #    and decrease charge_cooldown by 1
         # 4. Finally, call self.keep_in_bounds() to ensure the enemy stays on screen
-        pass
+        
 
     def move_random(self):
         # TODO: Implement random movement for the advanced enemy
+        self.angle += random.uniform(-0.1, 0.1)
+        self.speed_x = self.speed = math.cos(self.angle)
+        self.speed_y = self.speed = math.sin(self.angle)
+        self.move()
         # 1. Slightly adjust the angle (hint: use random.uniform(-0.1, 0.1))
         # 2. Calculate new speed_x and speed_y using math.cos and math.sin
         # 3. Call self.move() to update the position
